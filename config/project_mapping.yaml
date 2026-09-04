@@ -1,0 +1,97 @@
+# Cross-source project mapping (Section 6).
+#
+# This is the single source of truth for joining Jira projects to financial
+# projects. Nothing downstream is allowed to guess a mapping — if a project
+# is missing here, it is surfaced as UNKNOWN, never silently matched by name.
+#
+# organization_id / portfolio_id give Mem0 memory a stable scope that survives
+# project renames (see Section 11).
+#
+# project_status is enterprise portfolio metadata (lifecycle state as tracked
+# by the PPM/portfolio register) — it does not come from Jira or Finance, so
+# it lives here alongside the other ownership fields the join needs and that
+# neither source system provides.
+
+organization_id: "org-northwind"
+portfolio_id: "portfolio-elt-2026"
+
+projects:
+  PROJECT-10001:
+    jira_key: PHX
+    jira_project_id: "10001"
+    finance_project_id: "10001"
+    project_name: "Phoenix Platform Modernization"
+    project_manager: "Nathan Brooks"
+    business_owner: "Wei Zhang"
+    technical_owner: "David Kim"
+    project_status: "Active"
+
+  PROJECT-10002:
+    jira_key: ORCA
+    jira_project_id: "10002"
+    finance_project_id: "10002"
+    project_name: "Orca Payments Gateway"
+    project_manager: "Fatima Noor"
+    business_owner: "Rahul Mehta"
+    technical_owner: "Elena Petrova"
+    project_status: "Active"
+
+  PROJECT-10003:
+    jira_key: NOVA
+    jira_project_id: "10003"
+    finance_project_id: "10003"
+    project_name: "Nova Customer Portal"
+    project_manager: "Grace Lin"
+    business_owner: "Carlos Diaz"
+    technical_owner: "Alicia Chen"
+    project_status: "Active"
+
+  PROJECT-10004:
+    jira_key: TITAN
+    jira_project_id: "10004"
+    finance_project_id: "10004"
+    project_name: "Titan Infra Automation"
+    project_manager: "Marcus Johnson"
+    business_owner: "Brianna Scott"
+    technical_owner: "Jamal Carter"
+    project_status: "Active"
+
+  PROJECT-10005:
+    jira_key: LYNX
+    jira_project_id: "10005"
+    finance_project_id: "10005"
+    project_name: "Lynx Data Analytics"
+    project_manager: "Tom O'Brien"
+    business_owner: "Priya Raman"
+    technical_owner: "Sofia Rossi"
+    project_status: "Active"
+
+  # Deliberately UNMAPPED (Jira side only): exists in Jira
+  # (data/sample/jira_mock_data.csv, project_id 10006) but has no
+  # finance_project_id yet. Exercises Section 6 / Accuracy Check 3 — the
+  # pipeline must report financial_status = "UNKNOWN" and raise a
+  # DATA_MAPPING risk for this project rather than inventing numbers or
+  # silently dropping it.
+  PROJECT-10006:
+    jira_key: QSR
+    jira_project_id: "10006"
+    finance_project_id: null
+    project_name: "Quasar Self-Service Analytics"
+    project_manager: "Priya Raman"
+    business_owner: "Sofia Rossi"
+    technical_owner: "Wei Zhang"
+    project_status: "Active"
+
+  # Deliberately UNMAPPED (Finance side only) — the mirror-image case of
+  # PROJECT-10006: exists in Finance (data/sample/financial_mock_data.csv,
+  # project_id 10007) but was never onboarded to Jira. Proves
+  # delivery_status = "UNKNOWN" fires independently of financial_status.
+  PROJECT-10007:
+    jira_key: null
+    jira_project_id: null
+    finance_project_id: "10007"
+    project_name: "Helios Compliance Program"
+    project_manager: "Brianna Scott"
+    business_owner: "David Kim"
+    technical_owner: "Grace Lin"
+    project_status: "Active"

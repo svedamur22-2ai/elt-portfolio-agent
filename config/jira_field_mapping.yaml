@@ -1,0 +1,34 @@
+# Maps semantic field names (what the rest of the app asks for) to raw
+# source field keys (what the source actually calls them).
+#
+# For the CSV adapter, raw keys are just CSV column headers. For a live
+# Jira Cloud adapter, story points / sprint / epic link are almost always
+# custom fields with cryptic per-instance ids, e.g.:
+#   story_points: customfield_10016
+#   sprint_id:    customfield_10020
+# Swapping instances (or swapping CSV -> live Jira) means editing this file,
+# never src/services/jira_normalizer.py.
+#
+# Only fields the normalizer actually promotes into JiraIssue/Sprint are
+# listed here — keeping this file free of dead entries that nothing reads.
+
+fields:
+  issue_key: issue_key
+  project_id: project_id
+  project_key: project_key
+  project_name: project_name
+  summary: summary
+  issue_type: issue_type
+  status: status
+  priority: priority
+  assignee: assignee
+  story_points: story_points
+  sprint_id: sprint_id
+  sprint_name: sprint_name
+  sprint_start_date: sprint_start_date
+  sprint_end_date: sprint_end_date
+  issue_created_date: issue_created_date
+  issue_updated_date: issue_updated_date
+  resolution_date: resolution_date
+  blocker_status: blocker_status
+  dependencies: dependencies

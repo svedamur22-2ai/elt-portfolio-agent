@@ -1,0 +1,87 @@
+# Deterministic risk thresholds (Sections 8, 9, 10). The LLM never invents or
+# adjusts these numbers — services/risk_engine.py reads this file and every
+# threshold that fires becomes a reason code + evidence line (Accuracy Check 7).
+# Boundaries are inclusive on the lower bound of each tier unless noted.
+
+delivery_risk:
+  high:
+    sprint_completion_pct_below: 60
+    critical_blocker_open_days_above: 7
+    sprint_count_blocked_at_least: 2
+    milestone_overdue: true
+  medium:
+    sprint_completion_pct_between: [60, 80]
+    blocker_open_days_between: [3, 7]
+    repeated_carryover_sprints_at_least: 2
+    unresolved_dependencies: true
+  low:
+    sprint_completion_pct_at_least: 80
+    no_critical_blockers: true
+    milestones_on_schedule: true
+
+financial_risk:
+  high:
+    budget_consumption_pct_above: 90
+    delivery_progress_pct_below: 80
+    forecast_exceeds_approved: true
+    remaining_budget_pct_below: 10
+    spend_to_progress_ratio_above: 1.3
+  medium:
+    budget_consumption_pct_above: 75
+    forecast_within_pct_of_approved: 5
+    remaining_insufficient_for_remaining_work: true
+  low:
+    spend_consistent_with_progress: true
+    forecast_within_approved: true
+
+# Cross-domain matrix (Section 10). Keys are "<delivery>_<financial>".
+combined_risk_matrix:
+  high_high: RED
+  high_medium: RED
+  high_low: AMBER
+  medium_high: RED
+  medium_medium: AMBER
+  medium_low: AMBER
+  low_high: AMBER
+  low_medium: AMBER
+  low_low: GREEN
+  # Either side UNKNOWN (missing/unmapped source) never resolves to GREEN —
+  # it always caps at AMBER and adds a DATA_MAPPING or DATA_COMPLETENESS
+  # reason code, per Section 6.
+  unknown_default: AMBER
+
+reason_codes:
+  BLOCKED_MULTIPLE_SPRINTS: "Issue has been blocked for 2 or more consecutive sprints"
+  LOW_SPRINT_COMPLETION: "Sprint completion below the configured delivery threshold"
+  AGED_BLOCKER: "A blocker has been open longer than the configured threshold"
+  BUDGET_EXHAUSTION: "Remaining available funding is below the configured threshold"
+  NEGATIVE_REMAINING_BUDGET: "Remaining budget is negative — approved funding has already been exceeded"
+  HIGH_BUDGET_CONSUMPTION: "Budget consumption percentage exceeds the configured threshold"
+  FORECAST_OVERRUN: "Forecast spend exceeds approved budget"
+  SPEND_AHEAD_OF_PROGRESS: "Spend-to-progress ratio exceeds the configured threshold"
+  MILESTONE_DELAY: "A tracked milestone is past its target date"
+  DEPENDENCY_RISK: "Issue has unresolved linked dependencies"
+  DATA_MAPPING: "Project could not be matched across Jira and Finance sources"
+  DATA_COMPLETENESS: "A required field was missing and could not be inferred"
+  DATA_STALE: "Source data is older than the configured freshness threshold"
+  DATA_INCONSISTENT: "Source record failed a reconciliation check (see evidence)"
+  DATA_FETCH_INCOMPLETE: "Source pagination did not complete — results may be missing (see JiraFetchResult.partial_failure)"
+
+freshness_thresholds_hours:
+  jira: 24
+  # Finance closes monthly, not in real time — a monthly reporting_period
+  # legitimately stays the "latest available" for several weeks after it
+  # closes. 1080h = 45 days: one full period plus enough close-lag buffer
+  # that a project isn't wrongly flagged stale every single day of the month
+  # waiting for next period's numbers, while still catching a source that's
+  # gone genuinely quiet (e.g. two+ periods behind).
+  finance: 1080
+  memory: 168
+
+# Week-over-week trend classification (Section 14). A delta smaller than
+# these thresholds is treated as noise, not movement — otherwise a project
+# would flip between IMPROVING/DETERIORATING on rounding-sized week-to-week
+# wobble. services/trend_engine.py is the only reader of this section.
+trend_thresholds:
+  significant_completion_delta_pct: 5
+  significant_consumption_delta_pct: 5

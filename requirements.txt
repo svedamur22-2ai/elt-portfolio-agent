@@ -1,0 +1,29 @@
+# Core
+python-dotenv>=1.0.1
+pydantic>=2.7
+PyYAML>=6.0.1
+
+# Agent orchestration
+langchain>=0.2.0
+langchain-core>=0.2.0
+langchain-openai>=0.1.0
+langgraph>=0.1.0
+
+# Persistent memory
+mem0ai>=0.1.0
+
+# UI
+streamlit>=1.35.0
+plotly>=5.22.0
+
+# Jira connector
+requests>=2.31.0
+
+# Data handling / notebooks
+pandas>=2.2.0
+jupyter>=1.0.0
+notebook>=7.0.0
+
+# Testing
+pytest>=8.0.0
+pytest-mock>=3.14.0

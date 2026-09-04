@@ -1,0 +1,23 @@
+# Maps semantic field names to raw source column/field keys — same purpose
+# as config/jira_field_mapping.yaml, one level for the financial side.
+#
+# The point of this file existing at all: data/sample/financial_mock_data.csv
+# calls actual spend "actual_cost" and forecast spend "forecast_cost", and a
+# SQL Server/Snowflake/Oracle export will almost certainly use yet another
+# vocabulary again. Swapping sources means editing this file, never
+# src/connectors/financial_client.py.
+#
+# source_reported_remaining_budget is optional — leave it unset (or point it
+# at nothing) for a source that doesn't precompute its own remaining-budget
+# figure; when it IS present, reconciliation.detect_reconciliation_failure
+# compares it against this pipeline's own formula.
+
+fields:
+  project_id: project_id
+  reporting_period: financial_period
+  approved_budget: approved_budget
+  actual_spend: actual_cost
+  committed_spend: committed_cost
+  forecast_spend: forecast_cost
+  currency: currency
+  source_reported_remaining_budget: remaining_budget

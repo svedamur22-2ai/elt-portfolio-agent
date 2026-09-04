@@ -1,0 +1,44 @@
+# Normalizes team-specific Jira status vocabulary into a small canonical set
+# (Section 4). Different Jira boards in the sample data already disagree —
+# some use "Blocked" as a workflow status, others only set the separate
+# blocker_status flag — so both are normalized here independently.
+#
+# canonical_status values: TODO, IN_PROGRESS, IN_REVIEW, BLOCKED, DONE
+# canonical_blocker values: BLOCKED, NOT_BLOCKED
+
+status_map:
+  "To Do": TODO
+  "Open": TODO
+  "Backlog": TODO
+  "In Progress": IN_PROGRESS
+  "Development": IN_PROGRESS
+  "In Review": IN_REVIEW
+  "Testing": IN_REVIEW
+  "QA": IN_REVIEW
+  "Blocked": BLOCKED
+  "Impediment": BLOCKED
+  "Waiting": BLOCKED
+  "On Hold": BLOCKED
+  "Pending": BLOCKED
+  "Done": DONE
+  "Closed": DONE
+
+# blocker_status column (or equivalent custom field) is normalized separately
+# from workflow status, because a Jira issue can carry a "Blocked" flag while
+# its workflow status is anything (the sample data has real examples of this,
+# e.g. PHX-4 is "In Review" with blocker_status "Blocked" — a data-quality
+# case the validation layer is expected to flag, not silently resolve).
+blocker_status_map:
+  "Blocked": BLOCKED
+  "Impediment": BLOCKED
+  "Waiting": BLOCKED
+  "On Hold": BLOCKED
+  "Pending": BLOCKED
+  "Not Blocked": NOT_BLOCKED
+  "": NOT_BLOCKED
+
+# Statuses that count as "resolved" for sprint completion / story point math.
+resolved_statuses:
+  - DONE
+
+default_unmapped_status: UNKNOWN
