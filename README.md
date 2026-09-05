@@ -40,7 +40,7 @@ data in `data/sample/` — no external credentials required.
 ## Running the dashboard
 
 ```bash
-streamlit run app/streamlit_app.py
+streamlit run app/ELT_Intelligence_Agent.py
 ```
 
 Opens the Executive Overview, Project Portfolio, Sprint Health, Financial

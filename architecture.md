@@ -118,7 +118,7 @@ Phase 11) — see the docstring in `src/models/common.py` for the reasoning.
 devOps_week3_ELT/
 ├── notebooks/                  # 01 created; 02-15 land with their phase (see notebooks/README.md)
 ├── app/
-│   ├── streamlit_app.py
+│   ├── ELT_Intelligence_Agent.py
 │   └── pages/                  # created in Phase 10
 ├── src/
 │   ├── agents/                 # delivery, finance, risk, memory, validation, report
