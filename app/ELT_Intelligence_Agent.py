@@ -19,9 +19,10 @@ from datetime import date
 
 import streamlit as st
 
-from app.backend import projects_dataframe, render_sidebar_filters, run_portfolio_query
+from app.backend import inject_theme_css, projects_dataframe, render_sidebar_filters, run_portfolio_query
 
 st.set_page_config(page_title="ELT Portfolio Intelligence", page_icon="📊", layout="wide")
+inject_theme_css()
 
 st.title("ELT Portfolio Intelligence Agent")
 st.caption("Executive Leadership Team dashboard — Jira delivery + financial risk, unified and evidenced.")

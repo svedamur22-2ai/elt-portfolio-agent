@@ -3,3 +3,8 @@ base = "dark"
 backgroundColor = "#000000"
 secondaryBackgroundColor = "#1a1a1a"
 textColor = "#ffffff"
+# Categorical palette slot 1 (dataviz skill, references/palette.md) — used
+# here as the one brand accent (buttons, sliders, active tab/nav, progress
+# bars, heading accents below), deliberately distinct from the reserved
+# RAG/severity hues (green/amber/red/gray) so it never reads as a status.
+primaryColor = "#2a78d6"

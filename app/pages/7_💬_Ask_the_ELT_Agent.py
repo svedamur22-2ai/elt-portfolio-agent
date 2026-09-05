@@ -11,9 +11,10 @@ if str(PROJECT_ROOT) not in sys.path:
 
 import streamlit as st
 
-from app.backend import ask_question
+from app.backend import ask_question, inject_theme_css
 
 st.set_page_config(page_title="Ask the ELT Agent", page_icon="💬", layout="wide")
+inject_theme_css()
 st.title("Ask the ELT Agent")
 st.caption(
     "Answers are assembled entirely from already-computed facts (Section 13: the agent explains, it never "

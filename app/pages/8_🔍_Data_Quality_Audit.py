@@ -12,10 +12,11 @@ if str(PROJECT_ROOT) not in sys.path:
 import pandas as pd
 import streamlit as st
 
-from app.backend import apply_project_filters, projects_dataframe, render_sidebar_filters, risks_dataframe, run_portfolio_query
+from app.backend import apply_project_filters, inject_theme_css, projects_dataframe, render_sidebar_filters, risks_dataframe, run_portfolio_query
 from src.services import accuracy_audit
 
 st.set_page_config(page_title="Data Quality / Audit", page_icon="🔍", layout="wide")
+inject_theme_css()
 st.title("Data Quality / Audit")
 
 as_of = st.sidebar.date_input("As of date", value=date.today(), key="as_of_date")

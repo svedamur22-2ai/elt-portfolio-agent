@@ -10,9 +10,10 @@ if str(PROJECT_ROOT) not in sys.path:
 
 import streamlit as st
 
-from app.backend import apply_project_filters, projects_dataframe, render_sidebar_filters, run_portfolio_query
+from app.backend import apply_project_filters, inject_theme_css, projects_dataframe, render_sidebar_filters, run_portfolio_query
 
 st.set_page_config(page_title="Project Portfolio", page_icon="📁", layout="wide")
+inject_theme_css()
 st.title("Project Portfolio")
 
 as_of = st.sidebar.date_input("As of date", value=date.today(), key="as_of_date")

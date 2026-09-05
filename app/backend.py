@@ -50,6 +50,35 @@ STATUS_COLORS = {
 CATEGORICAL_PALETTE = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#4a3aa7", "#e34948"]
 
 
+def inject_theme_css() -> None:
+    """One small CSS accent layer, called once per page right after
+    `st.set_page_config`. Streamlit's dark theme otherwise renders every
+    heading in flat white — this gives page titles the brand accent color
+    (same blue as `.streamlit/config.toml`'s `primaryColor`, kept as one
+    constant here so the two can't drift apart) and a colored left border on
+    subheaders, so hierarchy reads at a glance instead of by font size
+    alone. Deliberately the ONE accent color used everywhere, rather than a
+    different hue per page — a per-page palette would risk colliding with
+    the reserved RAG/severity hues (green/amber/red/gray) used elsewhere on
+    these same pages for actual status meaning."""
+    st.markdown(
+        """
+        <style>
+        h1 {
+            color: #2a78d6 !important;
+            border-bottom: 3px solid #2a78d6;
+            padding-bottom: 0.3rem;
+        }
+        h2, h3 {
+            border-left: 5px solid #2a78d6;
+            padding-left: 0.6rem;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 @st.cache_resource
 def get_deps() -> NodeDeps:
     return NodeDeps(
