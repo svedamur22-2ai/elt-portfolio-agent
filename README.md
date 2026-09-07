@@ -24,29 +24,76 @@ Jira/Financial source outages (caught and degraded to `UNKNOWN`, never
 crashing the graph or fabricating data) are all implemented and tested. See
 [`notebooks/README.md`](notebooks/README.md) for per-phase notebook status.
 
-## Getting started
+## Running this project
+
+### 1. Prerequisites
+
+- Python 3.11+ (developed against 3.14)
+- No external accounts needed to run against the bundled sample data —
+  Jira/financial credentials and an LLM key are only required for the
+  optional live-source / LLM-narration paths (step 5 below).
+
+### 2. Clone and set up a virtual environment
 
 ```bash
+git clone https://github.com/svedamur22-2ai/elt-portfolio-agent.git
+cd elt-portfolio-agent
 python3 -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env   # only needed for a live Jira/Mem0/LLM instead of the bundled sample data
+```
+
+### 3. Run the test suite
+
+```bash
+pytest tests/ -q
+```
+
+This runs entirely against the sample data in `data/sample/` and mock
+connectors — no `.env` file needed.
+
+### 4. Explore via the notebooks
+
+```bash
 jupyter notebook notebooks/01_environment_setup.ipynb
 ```
 
-Every notebook in `notebooks/` runs standalone end-to-end against the sample
-data in `data/sample/` — no external credentials required.
+Every notebook in `notebooks/` (01 through 15, see
+[`notebooks/README.md`](notebooks/README.md) for what each one covers) runs
+standalone end-to-end against `data/sample/` — no external credentials
+required. To execute one non-interactively (as CI would):
 
-## Running the dashboard
+```bash
+jupyter nbconvert --to notebook --execute --output <name>.ipynb notebooks/<name>.ipynb
+```
+
+### 5. (Optional) Configure live sources / LLM narration
+
+```bash
+cp .env.example .env
+```
+
+Fill in `.env` only for the pieces you want live instead of mocked:
+`JIRA_URL`/`JIRA_EMAIL`/`JIRA_API_TOKEN` for a real Jira instance,
+`FINANCIAL_SOURCE_TYPE` to swap off the bundled CSV, and `OPENAI_API_KEY`
+for the optional LLM-narrated executive summary (also required by Mem0's
+local `Memory()` class for fact-extraction/embeddings — see the comments in
+`.env.example`). Everything runs correctly with none of this set; unmapped
+or unavailable data shows up as `UNKNOWN`/`NOT AVAILABLE`, never fabricated.
+
+### 6. Run the Streamlit dashboard
 
 ```bash
 streamlit run app/ELT_Intelligence_Agent.py
 ```
 
-Opens the Executive Overview, Project Portfolio, Sprint Health, Financial
-Health, Risk & Blockers, Trends, Ask the ELT Agent, and Data Quality / Audit
-pages (Section 16), all reading from the same LangGraph pipeline as the
-notebooks — see `app/backend.py`.
+Opens on `http://localhost:8501` by default (pass `--server.port <port>` if
+that's taken). The sidebar navigates between Executive Overview, Project
+Portfolio, Sprint Health, Financial Health, Risk & Blockers, Trends, Ask the
+ELT Agent, and Data Quality / Audit — all reading from the same LangGraph
+pipeline as the notebooks (see `app/backend.py`). Stop it with `Ctrl+C`, or
+`pkill -f "streamlit run app/ELT_Intelligence_Agent.py"` if it's running in
+the background.
 
 ## Repository layout
 
